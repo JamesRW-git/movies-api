@@ -37,7 +37,7 @@ public class MoviesController {
 
         movies.add(new Movie(2, "Pulp Fiction", "1994", "Quentin Tarantino",
                 "Samuel L. Jackson, Uma Thurman, Bruce Willis, John Travolta, Ving Rhames",
-                "10", "action, drama, suspense, cult classic, crime",
+                "action, drama, suspense, cult classic, crime",
                 "Vincent Vega (John Travolta) and Jules Winnfield (Samuel L. Jackson) are hitmen with a penchant " +
                         "for philosophical discussions. In this ultra-hip, multi-strand crime movie, their storyline is " +
                         "interwoven with those of their boss, gangster Marsellus Wallace (Ving Rhames) ; his actress " +
@@ -47,7 +47,7 @@ public class MoviesController {
         ));
 
         movies.add(new Movie(3, "Birdemic", "2010", "James Nguyen", "Alan Bagh, " +
-                "Whitney Moore, Tippi Hedren", "69", "horror, thriller",
+                "Whitney Moore, Tippi Hedren", "horror, thriller",
                 "In the town of Half Moon Bay California, there's an epidemic on the " +
                 "horizon: a Birdemic. All the birds are attacking humanity for their devastating damage they're " +
                 "inflicting on the Earth: they're going after gas stations and people's cars, and the birds have " +
@@ -56,10 +56,21 @@ public class MoviesController {
         movies.add(new Movie(1, "The Big Lebowski",
                 "1995", "The Cohen Bros",
                 "Jeff Bridges, John Goodman, Steve Buscemi",
-                "idk bro", "comedy, drama?",
+                "comedy, drama?",
                 "the dude just wanted to relax and go bowling"
         ));
 
         return movies;
+    }
+
+    @PostMapping
+    public void create(@RequestBody Movie newMovie) {
+        //add to our movies list (fake db)
+        sampleMovies.add(newMovie);
+    }
+
+    @PostMapping("all")
+    public void createAll(@RequestBody List<Movie> moviesToAdd) {
+        sampleMovies.addAll(moviesToAdd);
     }
 }
