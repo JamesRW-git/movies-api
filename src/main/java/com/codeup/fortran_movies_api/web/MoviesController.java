@@ -56,7 +56,7 @@ public class MoviesController {
     }
 
     @DeleteMapping("{id}") // /api/movies/{id}
-    public void deleteById(@PathVariable int movieId) throws IOException {
+    public void deleteById(@PathVariable int movieId){
         try {
             moviesRepository.deleteById(movieId);
         } catch(EmptyResultDataAccessException ex) {
