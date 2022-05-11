@@ -30,7 +30,7 @@ public class MoviesController {
 
     //@GetMapping("search/{title}")
     //public Movie getByTitle(@PathVariable String title){
-    @GetMapping("search")
+    @GetMapping("search") // /api/movies/search/title
     public List<Movie> getByTitle(@RequestParam("title") String title){
         return moviesRepository.findByTitle(title);
     }
@@ -40,14 +40,19 @@ public class MoviesController {
         return moviesRepository.findByYearRange(startYear, endYear);
     }
 
-    @PostMapping
+    @PostMapping // /api/movies POST
     public void create(@RequestBody Movie newMovie) {
         moviesRepository.save(newMovie);
     }
 
-    @PostMapping("all")
+    @PostMapping("all") // /api/movies/many POST
     public void createAll(@RequestBody List<Movie> moviesToAdd) {
         moviesRepository.saveAll(moviesToAdd);
+    }
+
+    @DeleteMapping("{id}") // /api/movies/{id}
+    public void deleteById(@PathVariable int movieId){
+        moviesRepository.deleteById(movieId);
     }
 
 }
