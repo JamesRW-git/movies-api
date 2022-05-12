@@ -95,6 +95,11 @@ INSERT INTO directors (name)
 VALUES ('Director Guy'),
        ('Director Lady');
 
+INSERT INTO actors (name)
+VALUES ('Mr. Actor Man'),
+       ('Ms. Actor Lady'),
+       ('Pac-Man');
+
 # create a genres table with two columns: id and name
 
 # create a many-to-many relationship b/t movies and genres by creating a movie_genre table.

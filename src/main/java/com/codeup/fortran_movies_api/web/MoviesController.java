@@ -1,9 +1,6 @@
 package com.codeup.fortran_movies_api.web;
 
-import com.codeup.fortran_movies_api.data.Director;
-import com.codeup.fortran_movies_api.data.DirectorsRepository;
-import com.codeup.fortran_movies_api.data.Movie;
-import com.codeup.fortran_movies_api.data.MoviesRepository;
+import com.codeup.fortran_movies_api.data.*;
 import jdk.swing.interop.SwingInterOpUtils;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -22,10 +19,12 @@ public class MoviesController {
 
     private final MoviesRepository moviesRepository;
     private final DirectorsRepository directorsRepository;
+    private final ActorRepository actorRepository;
 
-    public MoviesController(MoviesRepository moviesRepository, DirectorsRepository directorsRepository) {
+    public MoviesController(MoviesRepository moviesRepository, DirectorsRepository directorsRepository, ActorRepository actorRepository) {
         this.moviesRepository = moviesRepository;
         this.directorsRepository = directorsRepository;
+        this.actorRepository = actorRepository;
     }
 
     @GetMapping("all") // /api/movies/all
@@ -53,6 +52,11 @@ public class MoviesController {
     @GetMapping("search/director") // /api/movies/search/director
     public List<Director> getByDirector(@RequestParam("name") String directorName){
         return directorsRepository.findByName(directorName);
+    }
+
+    @GetMapping("search/actor")
+    public List<Actor> getByActor(@RequestParam("name") String actorName) {
+        return actorRepository.findByName(actorName);
     }
 
     @PostMapping // /api/movies POST
