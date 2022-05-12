@@ -52,9 +52,7 @@ public class MoviesController {
 
     @GetMapping("search/director") // /api/movies/search/director
     public List<Director> getByDirector(@RequestParam("name") String directorName){
-        List<Director> directors = directorsRepository.findByName(directorName);
-
-        return directors;
+        return directorsRepository.findByName(directorName);
     }
 
     @PostMapping // /api/movies POST

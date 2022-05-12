@@ -17,20 +17,20 @@ drop table if exists directors;
 # --> start with just a movies table with all the columns found in the movie json properties
 create table if not exists directors
 (
-    id int unsigned not null auto_increment primary key,
+    id   int unsigned not null auto_increment primary key,
     name varchar(120)
 );
 
 create table if not exists movies
 (
-    id       int unsigned not null auto_increment primary key,
-    title    varchar(120),
-    rating   char(1),
-    year     char(4),
-    poster   text,
-    plot     text,
+    id          int unsigned not null auto_increment primary key,
+    title       varchar(120),
+    rating      char(1),
+    year        char(4),
+    poster      text,
+    plot        text,
     director_id int unsigned not null,
-    foreign key (director_id) references directors(id)
+    foreign key (director_id) references directors (id)
 );
 
 # 6a. Run the script to make sure it works
@@ -47,7 +47,7 @@ describe directors;
 
 create table if not exists genres
 (
-    id int unsigned not null auto_increment primary key,
+    id   int unsigned not null auto_increment primary key,
     name varchar(255)
 );
 
@@ -57,15 +57,15 @@ create table if not exists movie_genre
 (
     movie_id int unsigned not null,
     genre_id int unsigned not null,
-    foreign key (movie_id) references movies(id),
-    foreign key (genre_id) references genres(id)
+    foreign key (movie_id) references movies (id),
+    foreign key (genre_id) references genres (id)
 );
 
 describe movie_genre;
 
 create table if not exists actors
 (
-    id int unsigned not null auto_increment primary key,
+    id   int unsigned not null auto_increment primary key,
     name varchar(255)
 );
 
@@ -75,8 +75,8 @@ create table if not exists movie_actor
 (
     movie_id int unsigned not null,
     actor_id int unsigned not null,
-    foreign key (movie_id) references movies(id),
-    foreign key (actor_id) references actors(id)
+    foreign key (movie_id) references movies (id),
+    foreign key (actor_id) references actors (id)
 );
 
 describe movie_actor;
@@ -89,7 +89,11 @@ VALUES ('comedy'),
        ('horror'),
        ('romance'),
        ('hallmark romance'),
-       ('thiller');
+       ('thriller');
+
+INSERT INTO directors (name)
+VALUES ('Director Guy'),
+       ('Director Lady');
 
 # create a genres table with two columns: id and name
 
@@ -100,7 +104,7 @@ VALUES ('comedy'),
 
 # create a many-to-many relationship b/t movies and actors by creating movie_actor table.
 # --> It needs to only contain a movie_id and actor_id (be sure to foreign key those to their respective tables)
-# );
+
 
 
 

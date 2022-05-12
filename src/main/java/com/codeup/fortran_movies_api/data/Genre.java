@@ -6,7 +6,7 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name = "genre")
+@Table(name = "genres")
 public class Genre {
 
     @Id
@@ -15,7 +15,12 @@ public class Genre {
     private String name;
 
     @ManyToMany
-    @JoinTable(name = "movie_genre")
+    @JoinTable(name = "movie_genre",
+            joinColumns =
+            @JoinColumn(name = "genre_id", referencedColumnName = "id"),
+            inverseJoinColumns =
+            @JoinColumn(name = "movie_id", referencedColumnName = "id")
+    )
     private List<Movie> movies;
 
     public Genre(int id, String name) {
@@ -23,7 +28,8 @@ public class Genre {
         this.name = name;
     }
 
-    public Genre(){};
+    public Genre() {
+    }
 
     public int getId() {
         return id;
@@ -39,5 +45,17 @@ public class Genre {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+//    public List<Movie> getMovies() {
+//        return movies;
+//    }
+
+    @Override
+    public String toString() {
+        return "Genre{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
     }
 }
