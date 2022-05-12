@@ -1,7 +1,10 @@
 package com.codeup.fortran_movies_api.web;
 
+import com.codeup.fortran_movies_api.data.Director;
+import com.codeup.fortran_movies_api.data.DirectorsRepository;
 import com.codeup.fortran_movies_api.data.Movie;
 import com.codeup.fortran_movies_api.data.MoviesRepository;
+import jdk.swing.interop.SwingInterOpUtils;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -18,17 +21,19 @@ import java.util.List;
 public class MoviesController {
 
     private final MoviesRepository moviesRepository;
+    private final DirectorsRepository directorsRepository;
 
-    public MoviesController(MoviesRepository moviesRepository) {
+    public MoviesController(MoviesRepository moviesRepository, DirectorsRepository directorsRepository) {
         this.moviesRepository = moviesRepository;
+        this.directorsRepository = directorsRepository;
     }
 
-    @GetMapping("all")
+    @GetMapping("all") // /api/movies/all
     public List<Movie> getAll() {
         return moviesRepository.findAll();
     }
 
-    @GetMapping("{id}")
+    @GetMapping("{id}") // api/movies/{id}
     public Movie getById(@PathVariable int id) {
         return moviesRepository.findById(id).orElse(null);
     }
@@ -45,6 +50,13 @@ public class MoviesController {
         return moviesRepository.findByYearRange(startYear, endYear);
     }
 
+    @GetMapping("search/director") // /api/movies/search/director
+    public List<Director> getByDirector(@RequestParam("name") String directorName){
+        List<Director> directors = directorsRepository.findByName(directorName);
+
+        return directors;
+    }
+
     @PostMapping // /api/movies POST
     public void create(@RequestBody Movie newMovie) {
         moviesRepository.save(newMovie);
@@ -53,6 +65,11 @@ public class MoviesController {
     @PostMapping("all") // /api/movies/many POST
     public void createAll(@RequestBody List<Movie> moviesToAdd) {
         moviesRepository.saveAll(moviesToAdd);
+    }
+
+    @PutMapping
+    public void updateOne(@RequestBody Movie movie) {
+        moviesRepository.save(movie);
     }
 
     @DeleteMapping("{id}") // /api/movies/{id}
