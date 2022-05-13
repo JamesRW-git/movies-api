@@ -28,6 +28,10 @@ public class Genre {
         this.name = name;
     }
 
+    public Genre(String name) {
+        this.name = name;
+    }
+
     public Genre() {
     }
 
@@ -47,9 +51,9 @@ public class Genre {
         this.name = name;
     }
 
-//    public List<Movie> getMovies() {
-//        return movies;
-//    }
+    public List<Movie> getMovies() {
+        return movies;
+    }
 
     @Override
     public String toString() {

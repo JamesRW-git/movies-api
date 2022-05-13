@@ -12,6 +12,8 @@ use movies_db;
 # 5. drop the table(s) to which no other tables are dependent (none at first)
 drop table if exists movies;
 drop table if exists directors;
+drop table if exists actors;
+drop table if exists genres;
 
 # 6. map the json movie properties to movies table columns
 # --> start with just a movies table with all the columns found in the movie json properties
@@ -19,6 +21,18 @@ create table if not exists directors
 (
     id   int unsigned not null auto_increment primary key,
     name varchar(120)
+);
+
+create table if not exists genres
+(
+    id   int unsigned not null auto_increment primary key,
+    name varchar(255)
+);
+
+create table if not exists actors
+(
+    id   int unsigned not null auto_increment primary key,
+    name varchar(255)
 );
 
 create table if not exists movies
@@ -33,26 +47,6 @@ create table if not exists movies
     foreign key (director_id) references directors (id)
 );
 
-# 6a. Run the script to make sure it works
-describe movies;
-describe directors;
-
-# 7. refactor to extract the directors to a new table with just an id and name
-# --> change the movies table to reference the directors table via Foreign Key
-# --> now that movies is dependent on directors, you need to move directors above movies in the script
-
-# 8. Go add DROP IF EXIST statements for movies and directors
-
-# 9. RUN IT!
-
-create table if not exists genres
-(
-    id   int unsigned not null auto_increment primary key,
-    name varchar(255)
-);
-
-describe genres;
-
 create table if not exists movie_genre
 (
     movie_id int unsigned not null,
@@ -62,14 +56,6 @@ create table if not exists movie_genre
 );
 
 describe movie_genre;
-
-create table if not exists actors
-(
-    id   int unsigned not null auto_increment primary key,
-    name varchar(255)
-);
-
-describe actors;
 
 create table if not exists movie_actor
 (
@@ -81,6 +67,20 @@ create table if not exists movie_actor
 
 describe movie_actor;
 
+# 6a. Run the script to make sure it works
+describe movies;
+describe directors;
+describe actors;
+describe genres;
+
+# 7. refactor to extract the directors to a new table with just an id and name
+# --> change the movies table to reference the directors table via Foreign Key
+# --> now that movies is dependent on directors, you need to move directors above movies in the script
+
+# 8. Go add DROP IF EXIST statements for movies and directors
+
+# 9. RUN IT!
+
 INSERT INTO genres (name)
 VALUES ('comedy'),
        ('drama'),
@@ -89,16 +89,30 @@ VALUES ('comedy'),
        ('horror'),
        ('romance'),
        ('hallmark romance'),
-       ('thriller');
+       ('thriller'),
+       ('war');
 
 INSERT INTO directors (name)
 VALUES ('Director Guy'),
-       ('Director Lady');
+       ('Director Lady'),
+       ('Francis Coppola');
 
 INSERT INTO actors (name)
 VALUES ('Mr. Actor Man'),
        ('Ms. Actor Lady'),
        ('Pac-Man');
+
+INSERT INTO movies (title, rating, year, poster, plot, director_id)
+VALUES ('Apocalypse Now', '5', '1979', 'https://m.media-amazon.com/images/I/41TUHqMRtML.jpg',
+        'It is the height of the war in Vietnam, and U.S. Army Captain Willard is sent by Colonel Lucas and a General to carry out a mission that, officially, \'does not exist - nor will it ever exist\'. The mission: To seek out a mysterious Green Beret Colonel, Walter Kurtz, whose army has crossed the border into Cambodia and is conducting hit-and-run missions against the Viet Cong and NVA. The army believes Kurtz has gone completely insane and Willard\'s job is to eliminate him. Willard, sent up the Nung River on a U.S. Navy patrol boat, discovers that his target is one of the most decorated officers in the U.S. Army. His crew meets up with surfer-type Lt-Colonel Kilgore, head of a U.S Army helicopter cavalry group which eliminates a Viet Cong outpost to provide an entry point into the Nung River. After some hair-raising encounters, in which some of his crew are killed, Willard, Lance and Chef reach Colonel Kurtz\'s outpost, beyond the Do Lung Bridge. Now, after becoming prisoners of Kurtz, will Willard & the others be able to fulfill their mission?'
+        , 3);
+
+INSERT INTO movie_actor
+VALUES (1,1);
+
+INSERT INTO movie_genre
+VALUES (1,9);
+
 
 # create a genres table with two columns: id and name
 

@@ -24,7 +24,7 @@ public class Movie {
     @JsonIgnoreProperties("movies")
     private List<Genre> genres;
 
-    public Movie(int id, String title, String year, /* String actors, String genre,*/ String plot) {
+    public Movie(int id, String title, String year, String plot, String poster, String rating) {
         this.id = id;
         this.title = title;
         this.year = year;
@@ -36,9 +36,15 @@ public class Movie {
     public Movie() {
     }
 
-    ;
+    public Movie(String title, String year, String plot, String poster, String rating) {
+        this.title = title;
+        this.year = year;
+        this.plot = plot;
+        this.poster = poster;
+        this.rating = rating;
+    }
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 

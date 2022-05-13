@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Spliterator;
+import java.util.stream.Collectors;
 
 @CrossOrigin
 @RestController
@@ -19,20 +21,30 @@ public class MoviesController {
 
     private final MoviesRepository moviesRepository;
     private final DirectorsRepository directorsRepository;
-    private final ActorRepository actorRepository;
-    private final GenreRepository genreRepository;
+    private final GenresRepository genresRepository;
 
-    public MoviesController(MoviesRepository moviesRepository, DirectorsRepository directorsRepository,
-                            ActorRepository actorRepository, GenreRepository genreRepository) {
+    public MoviesController(MoviesRepository moviesRepository, DirectorsRepository directorsRepository, GenresRepository genresRepository) {
         this.moviesRepository = moviesRepository;
         this.directorsRepository = directorsRepository;
-        this.actorRepository = actorRepository;
-        this.genreRepository = genreRepository;
+        this.genresRepository = genresRepository;
     }
 
     @GetMapping("all") // /api/movies/all
-    public List<Movie> getAll() {
-        return moviesRepository.findAll();
+    public List<MovieDto> getAll() {
+        List<Movie> movieEntities = moviesRepository.findAll();
+        List<MovieDto> movieDtos = new ArrayList<>();
+        for (Movie movie : movieEntities) {
+            movieDtos.add(new MovieDto(movie.getId(),
+                    movie.getTitle(),
+                    movie.getRating(),
+                    movie.getPoster(),
+                    movie.getYear(),
+                    movie.getGenres().stream().map(Genre::getName).collect(Collectors.joining(",")),
+                    movie.getDirector().getName(),
+                    movie.getPlot()));
+        }
+
+        return movieDtos;
     }
 
     @GetMapping("{id}") // api/movies/{id}
@@ -57,19 +69,41 @@ public class MoviesController {
         return directorsRepository.findByName(directorName);
     }
 
-    @GetMapping("search/actor") // /api/movies/search/actor
-    public List<Actor> getByActor(@RequestParam("name") String actorName) {
-        return actorRepository.findByName(actorName);
-    }
-
-    @GetMapping("search/genre") // /api/movies/search/genre
-    public List<Genre> getByGenre(@RequestParam("name") String genreName) {
-        return genreRepository.findByName(genreName);
-    }
-
     @PostMapping // /api/movies POST
-    public void create(@RequestBody Movie newMovie) {
-        moviesRepository.save(newMovie);
+    public void create(@RequestBody MovieDto movieDto) {
+        //add to our movies list
+        Movie movieToAdd = new Movie (
+                movieDto.getTitle(),
+                movieDto.getYear(),
+                movieDto.getPlot(),
+                movieDto.getPoster(),
+                movieDto.getRating()
+        );
+
+        List<Director> directorInDb = directorsRepository.findByName(movieDto.getDirector());
+        System.out.println(directorInDb);
+        if (directorInDb.isEmpty()) {
+            Director newDirector = new Director(movieDto.getDirector());
+            movieToAdd.setDirector(directorsRepository.save(newDirector));
+        } else {
+            movieToAdd.setDirector(directorInDb.get(0));
+        }
+
+        String[] genres = movieDto.getGenre().split(", ");
+        List<Genre> moviesGenres = new ArrayList<>();
+        for(String genre : genres) {
+            Genre genreInDb = genresRepository.findGenreByName(genre);
+            System.out.println(genreInDb);
+            if (genreInDb == null) {
+                Genre newGenre = new Genre(genre);
+                moviesGenres.add(genresRepository.save(newGenre));
+            } else {
+                moviesGenres.add(genreInDb);
+            }
+        }
+        movieToAdd.setGenres(moviesGenres);
+
+        moviesRepository.save(movieToAdd);
     }
 
     @PostMapping("all") // /api/movies/many POST
